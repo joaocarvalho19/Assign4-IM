@@ -1,0 +1,1055 @@
+﻿<?xml version="1.0"?>
+<grammar xml:lang="pt-PT" version="1.0" xmlns="http://www.w3.org/2001/06/grammar" tag-format="semantics/1.0">
+	
+	
+	<rule id="rootRule" scope="public">
+		<one-of>
+			 
+			<item>
+				<ruleref uri ="#MovePiece"/>
+				<tag> out.MovePiece = rules.MovePiece</tag>
+			</item>
+			
+			<item>
+				<ruleref uri ="#ChangeBoardColor"/>
+				<tag> out.ChangeBoardColor = rules.ChangeBoardColor</tag>
+			</item>
+			
+			<item>
+				<ruleref uri ="#ChangeAppearancePieces"/>
+				<tag> out.ChangeAppearancePieces = rules.ChangeAppearancePieces</tag>
+			</item>
+			
+			<item>
+				<ruleref uri ="#NewGame"/>
+				<tag> out.NewGame = rules.NewGame</tag>
+			</item>
+			
+			<item>
+				<ruleref uri ="#Cancel"/>
+				<tag> out.Cancel = rules.Cancel</tag>
+			</item>
+			
+			<item>
+				<ruleref uri ="#Save"/>
+				<tag> out.Save = rules.Save</tag>
+			</item>
+
+			<item>
+				<ruleref uri ="#StartGame"/>
+				<tag> out.StartGame = rules.StartGame</tag>
+			</item>
+
+			<item>
+				<ruleref uri ="#GiveUp"/>
+				<tag> out.GiveUp = rules.GiveUp</tag>
+			</item>
+
+			<item>
+				<ruleref uri ="#Undo"/>
+				<tag> out.Undo = rules.Undo</tag>
+			</item>
+
+			<item>
+				<ruleref uri ="#Redo"/>
+				<tag> out.Redo = rules.Redo</tag>
+			</item>
+
+			<item>
+				<ruleref uri ="#Hint"/>
+				<tag> out.Hint = rules.Hint</tag>
+			</item>
+
+			<item>
+				<ruleref uri ="#Options"/>
+				<tag> out.Options = rules.Options</tag>
+			</item>
+			
+			<item>
+				<ruleref uri ="#DeactivateSound"/>
+				<tag> out.DeactivateSound = rules.DeactivateSound</tag>
+			</item>
+			
+			<item>
+				<ruleref uri ="#ActivateSound"/>
+				<tag> out.ActivateSound = rules.ActivateSound</tag>
+			</item>
+			
+			<item>
+				<ruleref uri ="#ActivateSound"/>
+				<tag> out.ActivateSound = rules.ActivateSound</tag>
+			</item>
+
+			<item>
+				<ruleref uri ="#ScrollDown"/>
+				<tag> out.ScrollDown = rules.ScrollDown</tag>
+			</item>
+			
+			<item>
+				<ruleref uri ="#ScrollUp"/>
+				<tag> out.ScrollUp = rules.ScrollUp</tag>
+			</item>
+
+			<item>
+				<ruleref uri ="#Knight"/>
+				<tag> out.Knight = rules.Knight</tag>
+			</item>
+
+			<item>
+				<ruleref uri ="#Response_NG"/>
+				<tag> out.Response_NG = rules.Response_NG</tag>
+			</item>
+			
+		</one-of>	  
+	</rule>
+
+	<!-- Change board color -->
+	<rule id="ChangeBoardColor" scope="public">
+
+		<example> muda cor do tabuleiro </example>
+
+		<item repeat="0-1"> por favor </item>
+		<one-of>
+			<item>altera </item>
+			<item>muda </item>
+		</one-of>
+		<item> cor</item>
+		<item repeat="0-1"> do </item>
+		<item>
+			tabuleiro <tag>out="BOARD_COLOR"</tag>
+		</item>
+
+		<item repeat="0-1"> por favor </item>
+	</rule>
+
+	<!-- Change aspect of the pieces -->
+	<rule id="ChangeAppearancePieces" scope="public">
+
+		<example> muda aspeto das peças por favor </example>
+
+		<item repeat="0-1"> por favor </item>
+
+		<one-of>
+			<item>altera </item>
+			<item>muda </item>
+		</one-of>
+
+		<item> aspeto</item>
+		<item repeat="0-1"> das </item>
+		<item>
+			peças <tag>out="PIECE_APPEARANCE"</tag>
+		</item>
+		<item repeat="0-1"> por favor </item>
+	</rule>
+
+	<!-- Deactivate sound -->
+	<rule id="DeactivateSound" scope="public">
+
+		<example> desliga o som </example>
+
+		<item repeat="0-1"> por favor </item>
+
+		<one-of>
+			<item>desativa</item>
+			<item>desliga</item>
+		</one-of>
+
+		<item repeat="0-1"> o </item>
+
+		<one-of>
+			<item>
+				som<tag> out="NOSOUND"</tag>
+			</item>
+			<item>
+				volume<tag> out="NOSOUND"</tag>
+			</item>
+		</one-of>
+
+		<item repeat="0-1"> por favor </item>
+	</rule>
+
+
+	<!-- Activate sound -->
+	<rule id="ActivateSound" scope="public">
+
+		<example> liga o som </example>
+
+		<item repeat="0-1"> por favor </item>
+		<one-of>
+			<item>ativa</item>
+			<item>liga</item>
+		</one-of>
+
+		<item repeat="0-1"> o </item>
+		<one-of>
+			<item>
+				som<tag> out="SOUND"</tag>
+			</item>
+			<item>
+				volume<tag> out="SOUND"</tag>
+			</item>
+
+		</one-of>
+		<item repeat="0-1"> por favor </item>
+	</rule>
+
+
+	<!-- Move a piece -->
+	<rule id="MovePiece" scope="public">
+
+		<example> move primeiro peão duas casas</example>
+		<example> move rainha três casas para a direita </example>
+		<example> move cavalo da direita duas posições para cima uma posição para direita </example>
+		
+		<item repeat="0-1"> por favor </item>
+		<item>move</item>
+
+		<one-of>
+
+			<!-- pawn movements-->
+			<item>
+
+				<item repeat="0-1"> o </item>
+
+				<ruleref uri="#Ordinals"/>
+				<tag> out = rules.latest(); </tag>
+
+				<ruleref uri="#Pawn"/>
+				<tag> out = out + " " + rules.latest(); </tag>
+
+				<ruleref uri="#Quantity"/>
+				<tag> out = out + " " + rules.latest(); </tag>
+
+				<one-of>
+					<item repeat="0-1">posições</item>
+					<item repeat="0-1">casas</item>
+				</one-of>
+
+				<item repeat="0-1"> para </item>
+				<item repeat="0-1"> a </item>
+
+				<one-of>
+					<item repeat="0-1">
+						<item repeat="0-1">
+							<ruleref uri="#directionsud"/>
+							<tag> out = out + " " + rules.latest(); </tag>
+						</item>
+
+						<item repeat="0-1">
+
+							<ruleref uri="#directionsrl"/>
+							<tag> out = out + " " + rules.latest(); </tag>
+						</item>
+					</item>
+					<item repeat="0-1">
+						<item repeat="0-1">
+							<ruleref uri="#directionsrl"/>
+							<tag> out = out + " " + rules.latest(); </tag>
+						</item>
+
+						<item repeat="0-1">
+							<ruleref uri="#directionsud"/>
+							<tag> out = out + " " + rules.latest(); </tag>
+						</item>
+					</item>
+				</one-of>
+			</item>
+
+			<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+			<!-- non-singular Pieces  -->
+			<item>
+				<ruleref uri="#Ordinals"/>
+				<tag> out = rules.latest(); </tag>
+
+				<ruleref uri="#Object"/>
+				<tag> out = out + " " + rules.latest(); </tag>
+
+				<item repeat="0-1"> para </item>
+
+				<item>
+					<ruleref uri="#coordinates"/>
+					<tag> out = out + " " + rules.latest(); </tag>
+				</item>
+
+			
+			</item>
+			<!-- singular Pieces  -->
+			<item>
+
+				<ruleref uri="#Object"/>
+				<tag> out = out + " " + rules.latest(); </tag>
+
+				<item repeat="0-1"> para </item>
+
+				<item>
+					<ruleref uri="#coordinates"/>
+					<tag> out = out + " " + rules.latest(); </tag>
+				</item>
+
+			</item>
+			
+			<item>
+				<ruleref uri="#Ordinals"/>
+				<tag> out = rules.latest(); </tag>
+				
+				<ruleref uri="#Object"/>
+				<tag> out = out + " " + rules.latest(); </tag>
+
+				<one-of>
+					<item repeat="0-1">posições</item>
+					<item repeat="0-1">casas</item>
+				</one-of>
+
+				<item repeat="0-1"> para </item>
+				<item repeat="0-1"> a </item>
+
+				<item repeat="0-1">
+					<ruleref uri="#directionsud"/>
+					<tag> out = out + " " + rules.latest(); </tag>
+				</item>
+
+				<item repeat="0-1">
+
+					<ruleref uri="#directionsdiag"/>
+					<tag> out = out + " " + rules.latest(); </tag>
+
+					<ruleref uri="#directionsrl"/>
+					<tag> out = out + " " + rules.latest(); </tag>
+				</item>
+
+				<item repeat="0-1">
+					<ruleref uri="#directionsrl"/>
+					<tag> out = out + " " + rules.latest(); </tag>
+				</item>
+			</item>
+			<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+			<!-- general movements-->
+			<item>
+			<one-of>
+				<!-- without ordinal (queen...)-->
+				<item>
+				
+					<ruleref uri="#Object"/>
+					<tag> out = rules.latest(); </tag>
+
+
+					<ruleref uri="#Quantity"/>
+					<tag> out = out + " " + rules.latest(); </tag>
+
+					<one-of>
+						<item repeat="0-1">posições</item>
+						<item repeat="0-1">casas</item>
+					</one-of>
+
+					<item repeat="0-1"> para </item>
+					<item repeat="0-1"> a </item>
+
+					<one-of>
+						<item>
+							<item repeat="0-1">
+								<ruleref uri="#directionsud"/>
+								<tag> out = out + " " + rules.latest(); </tag>
+							</item>
+
+							<item repeat="0-1">
+
+								<ruleref uri="#directionsrl"/>
+								<tag> out = out + " " + rules.latest(); </tag>
+							</item>
+						</item>
+						<item>
+							<item repeat="0-1">
+								<ruleref uri="#directionsrl"/>
+								<tag> out = out + " " + rules.latest(); </tag>
+							</item>
+						
+							<item repeat="0-1">
+								<ruleref uri="#directionsud"/>
+								<tag> out = out + " " + rules.latest(); </tag>
+							</item>
+						</item>
+					</one-of>
+					
+				</item>
+				<!-- with ordinal (bishops...)-->
+				<item>
+
+					<item>
+						<ruleref uri="#Ordinals"/>
+						<tag> out = rules.latest(); </tag>
+					</item>
+
+					<ruleref uri="#Object"/>
+					<tag> out = out + " " +  rules.latest(); </tag>
+
+
+					<ruleref uri="#Quantity"/>
+					<tag> out = out + " " + rules.latest(); </tag>
+
+					<one-of>
+						<item repeat="0-1">posições</item>
+						<item repeat="0-1">casas</item>
+					</one-of>
+
+					<item repeat="0-1"> para </item>
+					<item repeat="0-1"> a </item>
+
+					<one-of>
+						<item>
+							<item repeat="0-1">
+								<ruleref uri="#directionsud"/>
+								<tag> out = out + " " + rules.latest(); </tag>
+							</item>
+
+							<item repeat="0-1">
+
+								<ruleref uri="#directionsrl"/>
+								<tag> out = out + " " + rules.latest(); </tag>
+							</item>
+						</item>
+						<item>
+							<item repeat="0-1">
+								<ruleref uri="#directionsrl"/>
+								<tag> out = out + " " + rules.latest(); </tag>
+							</item>
+
+							<item repeat="0-1">
+								<ruleref uri="#directionsud"/>
+								<tag> out = out + " " + rules.latest(); </tag>
+							</item>
+						</item>
+					</one-of>
+
+				</item>
+			</one-of>
+			</item>
+			<!-- knight movements-->
+			<item>
+
+				<ruleref uri="#Knight"/>
+				<tag> out = rules.latest(); </tag>
+
+				<!-- LOC- indicates whether the piece is located on the left or right -->
+				<item repeat ="0-1">
+					<ruleref uri="#directionsrl"/>
+					<tag> out = out + " LOC-" + rules.latest(); </tag>
+				</item>
+
+				<ruleref uri="#Quantity"/>
+				<tag> out = out + " " + rules.latest(); </tag>
+				<one-of>
+					<item>posições</item>
+					<item>casas</item>
+				</one-of>
+
+				<item repeat="0-1"> para </item>
+
+				<one-of>
+					<item>
+						<ruleref uri="#directionsrl"/>
+						<tag> out = out + " " + rules.latest(); </tag>
+					</item>
+
+					<item>
+						<ruleref uri="#directionsud"/>
+						<tag> out = out + " " + rules.latest(); </tag>
+					</item>
+
+				</one-of>
+
+				<item repeat="0-1"> e </item>
+
+				<ruleref uri="#Quantity"/>
+				<tag> out = out + " " + rules.latest(); </tag>
+
+				<one-of>
+					<item>posições</item>
+					<item>casas</item>
+				</one-of>
+
+				<item repeat="0-1"> para </item>
+
+				<one-of>
+					<item>
+						<ruleref uri="#directionsrl"/>
+						<tag> out = out + " " + rules.latest(); </tag>
+					</item>
+
+					<item>
+						<ruleref uri="#directionsud"/>
+						<tag> out = out + " " + rules.latest(); </tag>
+					</item>
+
+				</one-of>
+			</item>
+
+			<item repeat="0-1"> por favor </item>
+		</one-of>
+	</rule>
+
+	<rule id="directionsrl">
+		<one-of>
+			<item>
+				direita<tag>out="RIGHT"</tag>
+			</item>
+
+			<item>
+				esquerda<tag>out="LEFT"</tag>
+			</item>
+		</one-of>
+	</rule>
+
+	<rule id="directionsdiag">
+		<one-of>
+			<item>
+				diagonal<tag>out="DIAGONAL"</tag>
+			</item>
+
+		</one-of>
+	</rule>
+
+	<!-- start new game-->
+	<rule id="NewGame" scope="public">
+
+		<example> começa novo jogo </example>
+
+		<item repeat="0-1"> por favor </item>
+		<item>começa</item>
+		<item repeat="0-1">novo</item>
+		<item>
+			jogo<tag>out="NEWGAME"</tag>
+		</item>
+		<item repeat="0-1"> por favor </item>
+	</rule>
+
+	<rule id="StartGame" scope="public">
+		<item repeat="0-1"> por favor </item>
+		<item>comeca</item>
+		<item repeat="0-1"> um </item>
+		<item>
+			novo jogo <tag>out="STARTGAME"</tag>
+		</item>
+		<item repeat="0-1"> por favor </item>
+	</rule>
+
+	<!-- give up game-->
+	<rule id="GiveUp" scope="public">
+
+		<example> desiste do jogo </example>
+
+		<item repeat="0-1"> por favor </item>
+		<one-of>
+			<item>
+				desiste <tag>out="GIVEUP"</tag>
+			</item>
+			<item>
+				aborta <tag>out="GIVEUP"</tag>
+			</item>
+		</one-of>
+		<item repeat="0-1"> do </item>
+		<item repeat="0-1"> o </item>
+		<item>jogo</item>
+		<item repeat="0-1"> por favor </item>
+	</rule>
+
+
+	<!-- cancel options -->
+	<rule id="Cancel" scope="public">
+
+		<example> cancela alterações </example>
+
+		<item repeat="0-1"> por favor </item>
+		<item>
+			cancela <tag>out="CANCEL"</tag>
+		</item>
+		<item repeat="0-1">alterações</item>
+		<item repeat="0-1"> por favor </item>
+	</rule>
+
+
+	<!-- save options-->
+	<rule id="Save" scope="public">
+
+		<example> guarda alterações </example>
+
+		<item repeat="0-1"> por favor </item>
+		<item>
+			guarda <tag>out="SAVE"</tag>
+		</item>
+		<one-of>
+			<item repeat="0-1">alterações</item>
+			<item repeat="0-1">opções</item>
+		</one-of>
+		<item repeat="0-1"> por favor </item>
+	</rule>
+
+	
+	<!-- undo last move-->
+	<rule id="Undo" scope="public">
+
+		<example> volta atrás </example>
+		
+		<one-of>
+			<item>
+				<item repeat="0-1"> por favor </item>
+				<item>desfaz</item>
+				<item repeat="0-1"> último </item>
+				<item>
+					movimento <tag>out="UNDO"</tag>
+				</item>
+				<item repeat="0-1"> por favor </item>
+			</item>
+			<item>
+				<item repeat="0-1"> por favor </item>
+				<item>volta</item>
+				<item>
+					atrás <tag>out="UNDO"</tag>
+				</item>
+				<item repeat="0-1"> por favor </item>
+			</item>
+		</one-of>
+	</rule>
+
+	
+	<!-- redo last move -->
+	<rule id="Redo" scope="public">
+
+		<example> refaz último movimento </example>
+
+		<item repeat="0-1"> por favor </item>
+		<item>refaz</item>
+		<item repeat="0-1"> último </item>
+		<item>
+			movimento <tag> out="REDO" </tag>
+		</item>
+		<item repeat="0-1"> por favor </item>
+	</rule>
+
+
+	<!-- give hint -->
+	<rule id="Hint" scope="public">
+
+		<example> dá me uma dica </example>
+
+		<item repeat="0-1"> por favor </item>
+		<item> dá </item>
+		<item repeat="0-1"> me </item>
+		<item repeat="0-1"> uma </item>
+		<item>
+			dica <tag>out="CLUE"</tag>
+		</item>
+		<item repeat="0-1"> por favor </item>
+	</rule>
+
+
+	<!-- open options -->
+	<rule id="Options" scope="public">
+
+		<example> abre as definições </example>
+
+		<item repeat="0-1"> por favor </item>
+		<item> abre </item>
+		<item repeat="0-1"> as </item>
+		<one-of>
+			<item>
+				opções <tag>out="OPTIONS"</tag>
+			</item>
+
+			<item>
+				definições <tag>out="OPTIONS"</tag>
+			</item>
+		</one-of>
+		<item repeat="0-1"> por favor </item>
+	</rule>
+
+
+	<!-- scroll down-->
+	<rule id="ScrollDown" scope="public">
+
+		<example> anda para baixo </example>
+
+		<item repeat="0-1"> por favor </item>
+		<one-of>
+			<item>
+				<item> anda </item>
+				<item repeat="0-1"> para </item>
+				<item>
+					baixo <tag> out = "SCROLLDOWN"</tag>
+				</item>
+			</item>
+
+			<item>
+				<item> dá scroll</item>
+				<item repeat="0-1"> para </item>
+				<item>
+					baixo <tag> out = "SCROLLDOWN"</tag>
+				</item>
+			</item>
+
+			<item>
+				<item> desliza</item>
+				<item repeat="0-1"> para </item>
+				<item>
+					baixo <tag> out = "SCROLLDOWN"</tag>
+				</item>
+			</item>
+
+		</one-of>
+		<item repeat="0-1"> por favor </item>
+	</rule>
+
+
+
+	<!-- scroll up-->
+	<rule id="ScrollUp" scope="public">
+
+		<example> anda para cima </example>
+
+		<item repeat="0-1"> por favor </item>
+		<one-of>
+			<item>
+				<item> anda </item>
+				<item repeat="0-1"> para </item>
+				<item>
+					cima <tag> out = "SCROLLUP"</tag>
+				</item>
+			</item>
+
+			<item>
+				<item> dá scroll</item>
+				<item repeat="0-1"> para </item>
+				<item>
+					cima <tag> out = "SCROLLUP"</tag>
+				</item>
+			</item>
+
+			<item>
+				<item> desliza </item>
+				<item repeat="0-1"> para </item>
+				<item>
+					cima <tag> out = "SCROLLUP"</tag>
+				</item>
+			</item>
+
+		</one-of>
+		<item repeat="0-1"> por favor </item>
+	</rule>
+
+
+	<!-- objects with exception of the knight and pawn -->
+	<rule id="Object">
+
+		<one-of>
+
+			<item>
+				cavalo<tag>out="KNIGHT"</tag>
+			</item>
+			
+			<item>
+				rainha<tag>out="QUEEN"</tag>
+			</item>
+			<item>
+				rei<tag>out="KING"</tag>
+			</item>
+			<item>
+				torre<tag>out="ROOK"</tag>
+			</item>
+
+			<item>
+				bispo<tag>out="BISHOP"</tag>
+			</item>
+		</one-of>
+	</rule>
+
+	<!-- object knight -->
+	<rule id ="Knight">
+		<item>
+			cavalo<tag>out="KNIGHT"</tag>
+		</item>
+	</rule>
+
+
+	<!-- object pawn -->
+	<rule id ="Pawn">
+		<item>
+			peão<tag>out="PAWN"</tag>
+		</item>
+	</rule>
+
+	<rule id="coordinates">
+		<one-of>
+			<item>a um<tag>out="A1"</tag></item>
+			<item>a dois<tag>out="A2"</tag></item>
+			<item>a três<tag>out="A3"</tag></item>
+			<item>a quatro<tag>out="A4"</tag></item>
+			<item>a cinco<tag>out="A5"</tag></item>
+			<item>a seis<tag>out="A6"</tag></item>
+			<item>a sete<tag>out="A7"</tag></item>
+			<item>a oito<tag>out="A8"</tag></item>
+			
+			<item>b um<tag>out="B1"</tag></item>
+			<item>b dois<tag>out="B2"</tag></item>
+			<item>b três<tag>out="B3"</tag></item>
+			<item>b quatro<tag>out="B4"</tag></item>
+			<item>b cinco<tag>out="B5"</tag></item>
+			<item>b seis<tag>out="B6"</tag></item>
+			<item>b sete<tag>out="B7"</tag></item>
+			<item>b oito<tag>out="B8"</tag></item>
+
+			<item>c um<tag>out="C1"</tag></item>
+			<item>c dois<tag>out="C2"</tag></item>
+			<item>
+				c três<tag>out="C3"</tag>
+			</item>
+			<item>
+				c quatro<tag>out="C4"</tag>
+			</item>
+			<item>
+				c cinco<tag>out="C5"</tag>
+			</item>
+			<item>
+				c seis<tag>out="C6"</tag>
+			</item>
+			<item>
+				c sete<tag>out="C7"</tag>
+			</item>
+			<item>
+				c oito<tag>out="C8"</tag>
+			</item>
+
+			<item>
+				d um<tag>out="D1"</tag>
+			</item>
+			<item>
+				d dois<tag>out="D2"</tag>
+			</item>
+			<item>
+				d três<tag>out="D3"</tag>
+			</item>
+			<item>
+				d quatro<tag>out="D4"</tag>
+			</item>
+			<item>
+				d cinco<tag>out="D5"</tag>
+			</item>
+			<item>
+				d seis<tag>out="D6"</tag>
+			</item>
+			<item>
+				d sete<tag>out="D7"</tag>
+			</item>
+			<item>
+				d oito<tag>out="D8"</tag>
+			</item>
+
+			<item>
+				e um<tag>out="E1"</tag>
+			</item>
+			<item>
+				e dois<tag>out="E2"</tag>
+			</item>
+			<item>
+				e três<tag>out="E3"</tag>
+			</item>
+			<item>
+				e quatro<tag>out="E4"</tag>
+			</item>
+			<item>
+				e cinco<tag>out="E5"</tag>
+			</item>
+			<item>
+				e seis<tag>out="E6"</tag>
+			</item>
+			<item>
+				e sete<tag>out="E7"</tag>
+			</item>
+			<item>
+				e oito<tag>out="E8"</tag>
+			</item>
+
+			<item>
+				f um<tag>out="F1"</tag>
+			</item>
+			<item>
+				f dois<tag>out="F2"</tag>
+			</item>
+			<item>
+				f três<tag>out="F3"</tag>
+			</item>
+			<item>
+				f quatro<tag>out="F4"</tag>
+			</item>
+			<item>
+				f cinco<tag>out="F5"</tag>
+			</item>
+			<item>
+				f seis<tag>out="F6"</tag>
+			</item>
+			<item>
+				f sete<tag>out="F7"</tag>
+			</item>
+			<item>
+				f oito<tag>out="F8"</tag>
+			</item>
+
+			<item>
+				g um<tag>out="G1"</tag>
+			</item>
+			<item>
+				g dois<tag>out="G2"</tag>
+			</item>
+			<item>
+				g três<tag>out="G3"</tag>
+			</item>
+			<item>
+				g quatro<tag>out="G4"</tag>
+			</item>
+			<item>
+				g cinco<tag>out="G5"</tag>
+			</item>
+			<item>
+				g seis<tag>out="G6"</tag>
+			</item>
+			<item>
+				g sete<tag>out="G7"</tag>
+			</item>
+			<item>
+				g oito<tag>out="G8"</tag>
+			</item>
+
+			<item>
+				h um<tag>out="H1"</tag>
+			</item>
+			<item>
+				h dois<tag>out="H2"</tag>
+			</item>
+			<item>
+				h três<tag>out="G3"</tag>
+			</item>
+			<item>
+				h quatro<tag>out="H4"</tag>
+			</item>
+			<item>
+				h cinco<tag>out="H5"</tag>
+			</item>
+			<item>
+				h seis<tag>out="H6"</tag>
+			</item>
+			<item>
+				h sete<tag>out="H7"</tag>
+			</item>
+			<item>
+				h oito<tag>out="H8"</tag>
+			</item>
+		</one-of>
+	</rule>
+
+	<!-- up and down directions -->
+	<rule id="directionsud">
+		<one-of>
+
+			<!-- up -->
+			<item>
+				<one-of>
+					<item>
+						cima<tag>out="UP"</tag>
+					</item>
+					<item>
+						frente<tag>out="UP"</tag>
+					</item>
+				</one-of>
+			</item>
+
+			<!-- down -->
+			<item>
+				<one-of>
+					<item>
+						baixo<tag>out="DOWN"</tag>
+					</item>
+					<item>
+						trás<tag>out="DOWN"</tag>
+					</item>
+				</one-of>
+			</item>
+
+		</one-of>
+	</rule>
+
+	<!-- position of the pawns -->
+	<rule id="Ordinals">
+		<one-of>
+			<item>
+				primeiro<tag>out="FIRST"</tag>
+			</item>
+			<item>
+				segundo<tag>out="SECOND"</tag>
+			</item>
+			<item>
+				terceiro<tag>out="THIRD"</tag>
+			</item>
+			<item>
+				quarto<tag>out="FOURTH"</tag>
+			</item>
+			<item>
+				quinto<tag>out="FIFTH"</tag>
+			</item>
+			<item>
+				sexto<tag>out="SIXTH"</tag>
+			</item>
+			<item>
+				sétimo<tag>out="SEVENTH"</tag>
+			</item>
+			<item>
+				oitavo<tag>out="EIGHTH"</tag>
+			</item>
+		</one-of>
+	</rule>
+
+	<!-- quantity of places to move a piece-->
+	<rule id="Quantity">
+		<one-of>
+			<item>
+				uma<tag>out="ONE"</tag>
+			</item>
+			<item>
+				duas<tag>out="TWO"</tag>
+			</item>
+			<item>
+				três<tag>out="THREE"</tag>
+			</item>
+			<item>
+				quatro<tag>out="FOUR"</tag>
+			</item>
+			<item>
+				cinco<tag>out="FIVE"</tag>
+			</item>
+			<item>
+				seis<tag>out="SIX"</tag>
+			</item>
+			<item>
+				sete<tag>out="SEVEN"</tag>
+			</item>
+			<item>
+				oito<tag>out="EIGHT"</tag>
+			</item>
+		</one-of>
+	</rule>
+
+	<!-- Response to a new game ask-->
+	<rule id="Response_NG">
+		<one-of>
+			<item>
+				<item>
+					sim<tag>out="YES"</tag>
+				</item>
+				<item repeat="0-1"> quero </item>
+			</item>
+			<item>
+				<item> nao </item>
+				<item repeat="0-1"> quero </item>
+			</item>
+		</one-of>
+	</rule>
+	
+</grammar>
+

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:commons="http://commons.apache.org/scxml" xmlns:emma="http://www.w3.org/2003/04/emma" xmlns:mmi="http://www.w3.org/2008/04/mmi-arch" xmlns:schemaLocation="http://www.w3.org/2005/07/scxml scxml.xsd http://commons.apache.org/scxml commons.xsd http://www.w3.org/2008/04/mmi-arch mmi.xsd http://www.w3.org/2003/04/emma emma.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" initialstate="init">
+  <datamodel>
+    <data name="data1" />
+    <data name="data2" />
+  </datamodel>
+  <state id="init">
+    <onentry>
+      <log label="[init]" expr="READY" />
+    </onentry>
+    <transition target="main" />
+  </state>
+  <state id="main">
+    <onentry>
+      <log label="[main]" expr="READY" />
+    </onentry>
+    <transition target="ssecondmod[1][giveup]" event="[1][giveup]" />
+    <transition target="sspeech[action][giveup]" event="[action][GIVEUP]" />
+  </state>
+  <state id="ssecondmod[1][giveup]">
+    <onentry>
+      <log label="[ssecondmod[1][giveup]]" expr="READY" />
+      <assign name="data1" expr="${_eventdata.data}" />
+      <send id="state1-timer-ssecondmod[1][giveup]" event="timeout-ssecondmod[1][giveup]" delay="0" target="" targettype="" namelist="" />
+    </onentry>
+    <transition target="secondmod[1][giveup]-final" event="timeout-ssecondmod[1][giveup]" />
+    <onexit>
+      <cancel sendid="state1-timer-ssecondmod[1][giveup]" />
+    </onexit>
+  </state>
+  <state id="secondmod[1][giveup]-final">
+    <onentry>
+      <log label="[secondmod[1][giveup]-final]" expr="READY" />
+      <commons:var name="newExtensionNotification" expr="${mmi:newExtensionNotificationF2(contextId, 'FUSION', 'IM', mmi:newRequestId(contextId), null, data1, '[GIVEUP]')}" />
+      <send event="GIVEUP" target="IM" targettype="MC" namelist="newExtensionNotification" />
+    </onentry>
+    <transition target="main" />
+  </state>
+  <state id="sspeech[action][giveup]">
+    <onentry>
+      <log label="[sspeech[action][giveup]]" expr="READY" />
+      <assign name="data1" expr="${_eventdata.data}" />
+      <send id="state1-timer-sspeech[action][giveup]" event="timeout-sspeech[action][giveup]" delay="0" target="" targettype="" namelist="" />
+    </onentry>
+    <transition target="speech[action][giveup]-final" event="timeout-sspeech[action][giveup]" />
+    <onexit>
+      <cancel sendid="state1-timer-sspeech[action][giveup]" />
+    </onexit>
+  </state>
+  <state id="speech[action][giveup]-final">
+    <onentry>
+      <log label="[speech[action][giveup]-final]" expr="READY" />
+      <commons:var name="newExtensionNotification" expr="${mmi:newExtensionNotificationF2(contextId, 'FUSION', 'IM', mmi:newRequestId(contextId), null, data1, '[GIVEUP]')}" />
+      <send event="GIVEUP" target="IM" targettype="MC" namelist="newExtensionNotification" />
+    </onentry>
+    <transition target="main" />
+  </state>
+</scxml>
