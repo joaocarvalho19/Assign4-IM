@@ -7,12 +7,14 @@ import scxmlgen.interfaces.IModality;
  * @author nunof
  */
 public enum SecondMod implements IModality{
+    
+    
+    GIVEUP_GES("[2][giveup]",2000),
+    NEWGAME_GES("[3][newgamev]",1500),
+    ACCEPT_GES("[0][acceptv]",1500),
+    CLUE_GES("[1][cluev]",1500),
 
-    /*RED("[color][RED]",1500),
-    BLUE("[color][BLUE]",1500),
-    YELLOW("[color][YELLOW]",1500);*/
-    GIVEUP("[1][giveup]",1500);
-
+    THEME_GES("[5][themev]",3000);
     ;
     
     private String event;

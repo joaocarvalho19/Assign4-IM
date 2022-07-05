@@ -61,6 +61,11 @@
 			</item>
 
 			<item>
+				<ruleref uri ="#Colors"/>
+				<tag> out.Colors = rules.Colors</tag>
+			</item>
+
+			<item>
 				<ruleref uri ="#Options"/>
 				<tag> out.Options = rules.Options</tag>
 			</item>
@@ -1001,6 +1006,27 @@
 			</item>
 			<item>
 				oitavo<tag>out="EIGHTH"</tag>
+			</item>
+		</one-of>
+	</rule>
+
+	<!-- position of the pawns -->
+	<rule id="Colors">
+		<one-of>
+			<item>
+				azul<tag>out="BLUE"</tag>
+			</item>
+			<item>
+				vermelho<tag>out="RED"</tag>
+			</item>
+			<item>
+				verde<tag>out="GREEN"</tag>
+			</item>
+			<item>
+				castanho<tag>out="BROWN"</tag>
+			</item>
+			<item>
+				laranja<tag>out="ORANGE"</tag>
 			</item>
 		</one-of>
 	</rule>

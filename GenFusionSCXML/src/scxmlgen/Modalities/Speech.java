@@ -8,11 +8,17 @@ import scxmlgen.interfaces.IModality;
 
 public enum Speech implements IModality{  
 
-	/*SQUARE("[shape][SQUARE]",1500),
-        TRIANGLE("[shape][TRIANGLE]",1500),
-        CIRCLE("[shape][CIRCLE]",1500);*/
         
-        GIVEUP("[action][GIVEUP]",1500);
+        GIVEUP("[action][GIVEUP]",1500),
+        NEWGAME("[action][NEWGAME]",1500),
+        ACCEPT("[action][ACCEPT]",1500),
+        CLUE("[action][CLUE]",1500),
+        BLUE("[action][BLUE]",2000),
+        BROWN("[action][BROWN]",2000),
+        GREEN("[action][GREEN]",2000),
+        ORANGE("[action][ORANGE]",2000),
+        RED("[action][RED]",2000);
+
 
 
 private String event; 
@@ -27,10 +33,12 @@ public int getTimeOut(){
 }
 @Override
 public String getEventName(){
+    
 	return event;
 }
 @Override
 public String getEvName(){
+        
 	return getModalityName().toLowerCase() +event.toLowerCase();
 }
 

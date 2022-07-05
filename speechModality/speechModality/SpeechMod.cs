@@ -22,6 +22,9 @@ namespace speechModality
         // Flag to check hint reponse
         Boolean hint_flag = false;
 
+        // Flag to check abort reponse
+        Boolean abort_flag = false;
+
         public event EventHandler<SpeechEventArg> Recognized;
         protected virtual void onRecognized(SpeechEventArg msg)
         {
@@ -33,7 +36,8 @@ namespace speechModality
         }
 
         private LifeCycleEvents lce;
-        private MmiCommunication mmic;
+        private MmiCommunication mmic_fusion;
+        private MmiCommunication mmic_direct;
 
         //  NEW 16 april
         private static Tts tts = new Tts(sre);
@@ -43,10 +47,12 @@ namespace speechModality
         {
             //init LifeCycleEvents..
             lce = new LifeCycleEvents("ASR", "FUSION", "speech-1", "acoustic", "command"); // LifeCycleEvents(string source, string target, string id, string medium, string mode)
-            mmic = new MmiCommunication("localhost",9876,"User1", "ASR");  //PORT TO FUSION - uncomment this line to work with fusion later
-            //mmic = new MmiCommunication("localhost", 8000, "User1", "ASR"); // MmiCommunication(string IMhost, int portIM, string UserOD, string thisModalityName)
+            mmic_fusion = new MmiCommunication("localhost",9876,"User1", "ASR");  //PORT TO FUSION - uncomment this line to work with fusion later
+            mmic_direct = new MmiCommunication("localhost", 8000, "User1", "ASR"); // MmiCommunication(string IMhost, int portIM, string UserOD, string thisModalityName)
 
-            mmic.Send(lce.NewContextRequest());
+            mmic_fusion.Send(lce.NewContextRequest());
+            mmic_direct.Send(lce.NewContextRequest());
+
 
             //load pt recognizer
             //sre = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("pt-PT"));
@@ -85,7 +91,7 @@ namespace speechModality
             onRecognized(new SpeechEventArg() { Text = e.Result.Text, Confidence = e.Result.Confidence, Final = true });
             Console.WriteLine(e.Result.Confidence);
 
-            if (e.Result.Confidence > 0.4)
+            if (e.Result.Confidence > 0.7)
             {
                 //SEND
                 // IMPORTANT TO KEEP THE FORMAT {"recognized":["SHAPE","COLOR"]}
@@ -121,6 +127,20 @@ namespace speechModality
                             json += "\"" + resultSemantic.Value.Value + "\", ";
                         }
                     }
+                    else if (abort_flag)
+                    {
+                        if (resultSemantic.Value.Value + "_" == "YES_")
+                        {
+                            final_value = "YES_ABORT";
+                            Console.WriteLine(final_value);
+                            json += "\"" + final_value + "\", ";
+                        }
+                        else
+                        {
+                            Console.WriteLine(resultSemantic);
+                            json += "\"" + resultSemantic.Value.Value + "\", ";
+                        }
+                    }
                     else
                     {
                         Console.WriteLine(resultSemantic);
@@ -130,6 +150,7 @@ namespace speechModality
 
                 new_game_flag = false;
                 hint_flag = false;
+                abort_flag = false;
                 json = json.Substring(0, json.Length - 2);
                 json += "] }";
 
@@ -137,7 +158,16 @@ namespace speechModality
                 Console.WriteLine(json);
 
                 var exNot = lce.ExtensionNotification(e.Result.Audio.StartTime + "", e.Result.Audio.StartTime.Add(e.Result.Audio.Duration) + "", e.Result.Confidence, json);
-                mmic.Send(exNot);
+                //if (json.Contains("GIVEUP") || json.Contains("NEWGAME") || json.Contains("ACCEPT") || json.Contains("CLUE") || json.Contains("BLUE") || json.Contains("RED") || json.Contains("ORANGE") || json.Contains("GREEN") || json.Contains("BROWN"))
+                //{
+                    Console.WriteLine("----FUSION");
+                    mmic_fusion.Send(exNot);
+                //}
+                //else {
+                    //Console.WriteLine("----DIRECT");
+                    //mmic_direct.Send(exNot);
+                //}
+                
             }
             else {
                 tts.Speak("O seu pedido não foi muito claro. Importa-se de repetir ?");
@@ -173,17 +203,25 @@ namespace speechModality
             switch (com)
             {
                 case "giveup":
-                    //tts.Speak("O jogo foi abortado. Deseja começar um novo?");
+                case "GIVEUP_REDU":
+                    tts.Speak("O jogo foi abortado. Deseja começar um novo?");
                     new_game_flag = true;
                     break;
 
+                case "GIVEUP":
+                    tts.Speak("Quer realmente abortar o jogo?");
+                    abort_flag = true;
+                    break;
+
                 case "newgame":
+                case "NEWGAME":
                     if (new_game_flag) { 
                         tts.Speak("Pode começar. Boa sorte!");
                         new_game_flag = false;
                     }
                     break;
                 case "record":
+                case "CLUE":
                     tts.Speak("Esta seria uma boa jogada. Deseja fazê-la ?");
                     hint_flag = true;
                     break;

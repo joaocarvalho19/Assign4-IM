@@ -7,27 +7,27 @@
   </Gesture>
   <Gesture>
     <ID>1</ID>
+    <NAME>clue_v2</NAME>
+    <SEMANTIC>cluev</SEMANTIC>
+  </Gesture>
+  <Gesture>
+    <ID>2</ID>
     <NAME>giveup</NAME>
     <SEMANTIC>giveup</SEMANTIC>
   </Gesture>
   <Gesture>
-    <ID>2</ID>
-    <NAME>newgame</NAME>
-    <SEMANTIC>newgame</SEMANTIC>
-  </Gesture>
-  <Gesture>
     <ID>3</ID>
-    <NAME>record_1</NAME>
-    <SEMANTIC>record</SEMANTIC>
+    <NAME>newgame_v2</NAME>
+    <SEMANTIC>newgamev</SEMANTIC>
   </Gesture>
   <Gesture>
     <ID>4</ID>
-    <NAME>redo</NAME>
-    <SEMANTIC>redo</SEMANTIC>
+    <NAME>theme_v2</NAME>
+    <SEMANTIC>themev</SEMANTIC>
   </Gesture>
   <Gesture>
     <ID>5</ID>
-    <NAME>undo</NAME>
-    <SEMANTIC>undo</SEMANTIC>
+    <NAME>theme_v3</NAME>
+    <SEMANTIC>themev</SEMANTIC>
   </Gesture>
 </Gestures>

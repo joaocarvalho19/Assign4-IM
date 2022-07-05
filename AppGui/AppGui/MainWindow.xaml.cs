@@ -31,6 +31,8 @@ namespace AppGui
 
         Boolean hint_flag = false;
         Boolean newgame_flag = false;
+        Boolean abort_flag = false;
+
         int current_hints_num = 0;
 
         String chess_url = "https://www.chess.com/play/computer";
@@ -139,7 +141,18 @@ namespace AppGui
                 IList<IWebElement> controlsButtoms = driver.FindElements(By.ClassName("primary-controls-button"));
                 IWebElement new_gameButtom = controlsButtoms[0];
                 new_gameButtom.Click();
+            }
+            catch (WebDriverException e)
+            {
+                Console.WriteLine("ERROR {0}", e);
+            }
+    
+        }
 
+        public void confirm_abort()
+        {
+            try
+            {
                 IWebElement yesButton = driver.FindElement(By.XPath("//button[.='Yes']"));
                 yesButton.Click();
 
@@ -149,7 +162,27 @@ namespace AppGui
             {
                 Console.WriteLine("ERROR {0}", e);
             }
-    
+
+        }
+
+        public void abort_game_fusion()
+        {
+            try
+            {
+                IList<IWebElement> controlsButtoms = driver.FindElements(By.ClassName("primary-controls-button"));
+                IWebElement new_gameButtom = controlsButtoms[0];
+                new_gameButtom.Click();
+                System.Threading.Thread.Sleep(1000);
+                IWebElement yesButton = driver.FindElement(By.XPath("//button[.='Yes']"));
+                yesButton.Click();
+
+                coordinates.Clear();
+            }
+            catch (WebDriverException e)
+            {
+                Console.WriteLine("ERROR {0}", e);
+            }
+
         }
         public void start_new_game()
         {
@@ -264,6 +297,31 @@ namespace AppGui
             {
                 Console.WriteLine("ERROR {0}", e);
             }
+        }
+
+        public void change_theme(string _color)
+        {       // Blue; Brown; Green; Orange; Red
+            try
+            {
+                click("circle-gearwheel");
+                System.Threading.Thread.Sleep(2000);
+                // Get all elements with a given ClassName
+
+                IList<IWebElement> all = driver.FindElements(By.ClassName("settings-select"));
+
+                //create select element object 
+                var selectElement = new SelectElement(all[1]);
+
+                //select by value
+                selectElement.SelectByText(_color);
+                System.Threading.Thread.Sleep(2000);
+                save_options();
+            }
+            catch (WebDriverException e)
+            {
+                Console.WriteLine("ERROR {0}", e);
+            }
+
         }
 
         // Change the color of the board
@@ -520,59 +578,20 @@ namespace AppGui
             start_Browser();
             move("white_pawn_5", "square-54");
 
-            /*System.Threading.Thread.Sleep(7000);
-            show_clue();
-            System.Threading.Thread.Sleep(3000);
-            hint_move();
-            System.Threading.Thread.Sleep(3000);
-            show_clue();
-            System.Threading.Thread.Sleep(3000);
-            hint_move();
-            System.Threading.Thread.Sleep(3000);
-            show_clue();
-            System.Threading.Thread.Sleep(3000);
-            hint_move();
-            System.Threading.Thread.Sleep(3000);
-            show_clue();
-            System.Threading.Thread.Sleep(3000);
-            hint_move();
-            System.Threading.Thread.Sleep(3000);
-            show_clue();
-            System.Threading.Thread.Sleep(3000);
-            hint_move();
-            System.Threading.Thread.Sleep(3000);
-            show_clue();
-            System.Threading.Thread.Sleep(3000);
-            hint_move();
-            show_clue();
-            System.Threading.Thread.Sleep(5000);
             
-            System.Threading.Thread.Sleep(5000);
-
-            System.Threading.Thread.Sleep(5000);
-
-            //one_direction("white_rook_", 2, "1", "up");
-            two_directions("white_queen", 3, "right", "up");
-            System.Threading.Thread.Sleep(5000);
-
-            testpawn("white_pawn_", 2, "1");
-
-            System.Threading.Thread.Sleep(5000);
-
-            two_directions("white_queen", 2, "left", "down");
-
-            */
+            //System.Threading.Thread.Sleep(10000);
+            //change_theme("Blue");
         }
 
         private void MmiC_Message(object sender, MmiEventArgs e)
         {
-            Console.WriteLine("-------RECEIVED!!!!");
             var doc = XDocument.Parse(e.Message);
             var com = doc.Descendants("command").FirstOrDefault().Value;
+            Console.WriteLine("-------V2: " + doc.ToString());
             dynamic json = JsonConvert.DeserializeObject(com);
 
             // Print income msg
-            Console.WriteLine("INCOME MSG: "+(string)json.recognized[0].ToString());
+            Console.WriteLine("INCOME MSG: "+(string)json.recognized.ToString());
             string piece = null;
             string ordinal = null;
             int quantity = 0;
@@ -588,30 +607,30 @@ namespace AppGui
 
             // Mexer Peão
             
-            switch (msg)
+            switch (elements[0])
             {
-                /*case "acceptv":
-                    if (hint_flag) { 
+                case "ACCEPT":
+                    if (hint_flag)
+                    {
                         hint_move();
                         hint_flag = false;
                     }
-                    else
+                    else if (abort_flag)
                     {
-                        Console.WriteLine("Hint false");
+                        confirm_abort();
+                        abort_flag = false;
+                        newgame_flag = true;
                     }
                     break;
-                case "giveup":
+                case "GIVEUP_REDU":
                     newgame_flag = true;
-                    abort_game();
+                    abort_game_fusion();
                     break;
-                case "newgame":
+                case "NEWGAME":
                     if (newgame_flag)
                     {
                         start_new_game();
                         newgame_flag = false;
-                    }
-                    else {
-                        Console.WriteLine("New game false");
                     }
                     break;
                 case "undo":
@@ -620,23 +639,41 @@ namespace AppGui
                 case "redo":
                     redo_move();
                     break;
-                case "record":
+                case "CLUE":
                     hint_flag = true;
                     show_clue();
-                    break;*/
+                    break;
+                case "THEME_BLUE":
+                    change_theme("Blue");
+                    break;
+                case "THEME_RED":
+                    change_theme("Red");
+                    break;
+                case "THEME_BROWN":
+                    change_theme("Brown");
+                    break;
+                case "THEME_GREEN":
+                    change_theme("Green");
+                    break;
+                case "THEME_ORANGE":
+                    change_theme("Orange");
+                    break;
 
 
-                    case "YES_NEWGAME":
+                case "YES_NEWGAME":
                         start_new_game();
                         break;
-                    case "YES_CLUE":
+                case "YES_CLUE":
                         hint_move();
                         break;
-                    case "GIVEUP":
-                        abort_game();
+                case "YES_ABORT":
+                        newgame_flag = true;
+                        abort_flag = false;
+                        confirm_abort();
                         break;
-                    case "NEWGAME":
-                        start_new_game();
+                    case "GIVEUP":
+                        abort_flag = true;
+                        abort_game();
                         break;
                     case "OPTIONS":
                         open_settings();
@@ -646,9 +683,6 @@ namespace AppGui
                         break;
                     case "REDO":
                         redo_move();
-                        break;
-                    case "CLUE":
-                        show_clue();
                         break;
                     case "BOARD_COLOR":
                         change_color();
@@ -710,6 +744,34 @@ namespace AppGui
                 {
                 switch (elements[1])
                     {
+                    case "cluev":
+                        hint_flag = true;
+                        show_clue();
+                        break;
+                    case "acceptv":
+                        if (hint_flag)
+                        {
+                            hint_move();
+                            hint_flag = false;
+                        }
+                        if (abort_flag)
+                        {
+                            confirm_abort();
+                            abort_flag = false;
+                            newgame_flag = true;
+                        }
+                        break;
+                    case "giveup":
+                        abort_flag = true;
+                        abort_game();
+                        break;
+                    case "newgamev":
+                        if (newgame_flag)
+                        {
+                            start_new_game();
+                            newgame_flag = false;
+                        }
+                        break;
                     case "PAWN":
                         piece = "white_pawn_";
                         break;
@@ -751,7 +813,7 @@ namespace AppGui
             }
             catch (Exception ex)
                 {
-                    Console.WriteLine("ERROR {0}", ex);
+                    //Console.WriteLine("ERROR {0}", ex);
                 }
             try
             {
@@ -997,7 +1059,7 @@ namespace AppGui
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERROR {0}", ex);
+                //Console.WriteLine("ERROR {0}", ex);
             }
             try
             {
@@ -1024,7 +1086,7 @@ namespace AppGui
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERROR {0}", ex);
+                //Console.WriteLine("ERROR {0}", ex);
             }
             try
             {
@@ -1047,7 +1109,7 @@ namespace AppGui
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERROR {0}", ex);
+                //Console.WriteLine("ERROR {0}", ex);
             }
 
             /* - - - - - -  - Process - - - - - - - -*/
